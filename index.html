@@ -448,6 +448,68 @@ hintNoButton.onclick = function () {
         </div>
     </div>
 
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <div class="welcome-text">
+                <h2>Welcome to Conversa!</h2>
+                <p>🚀 Explore the world of language learning with our interactive chatbot. 🗣️</p>
+            </div>
+            <button onclick="closePopup()">Let's go!</button>
+        </div>
+    </div>
+<style>
+    .popup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    .popup-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .popup button {
+        background-color: #19C27D;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+    
+    .popup button:hover {
+        background-color: #15a068;
+    }
+    
+</style>
+
+<script>
+    // JavaScript function to close the popup
+function closePopup() {
+    var popup = document.getElementById("popup");
+    popup.style.display = "none";
+}
+
+// JavaScript code to show the popup when the page loads
+window.onload = function() {
+    var popup = document.getElementById("popup");
+    popup.style.display = "flex";
+}
+
+</script>
+
+
     <div id="teaching-popup" class="teaching-popup">
         <div class="popup-content">
             <span class="close-button" id="teaching-close-button">&times;</span>
