@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Conversa </title>
+       <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        #chat-container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            max-height: 80vh;
+            animation: slide-in 0.5s ease-out;
+        }
+        
+        @keyframes slide-in {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .message {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+            animation: fade-in 0.3s ease-out;
+        }
+        
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .avatar {
+            font-size: 28px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .avatar1 {
+            background-image: url('ai-smile.png');
+            background-size: cover;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+        
+        .bot-message .avatar {
+            background-image: url('ai-smile.png');
+            background-size: cover;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+        
+        .user-message .avatar {
+            background-image: url('user.png');
+            background-size: cover;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+        
+        .text {
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            animation: fade-in 0.5s ease-out;
+        }
+        
+        .option-box {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .option-box:hover {
+            background-color: #ddd;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #eee;
+            outline: none;
+            font-size: 16px;
+            background-color: #f7f7f7;
+            border-radius: 0 0 10px 10px;
+            animation: fade-in 0.5s ease-out;
+        }
+        
+        .send-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        .dark-mode-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #000;
+            transition: color 0.3s;
+        }
+        
+        .dark-mode-button:hover {
+            color: #fff;
+        }
+        /* Add this style to your existing CSS */
+.dark-mode .option-box {
+    background-color: #333;
+    color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .option-box:hover {
+    background-color: #444;
+}
+
+/* Add this style to your existing CSS */
+.dark-mode .send-button {
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .send-button:hover {
+    background-color: #0056b3;
+}
+
+/* Popup styles */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Add more styles as needed */
+/* Teaching Popup styles */
+.teaching-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Add more styles as needed */
+/* Hint Popup styles */
+.hint-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.hint-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.hint-options {
+    margin-top: 20px;
+}
+
+/* Add more styles as needed */
+
+/* Style for the speak button */
+.speak-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 24px;
+    background-color: #202123;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    outline: none;
+}
+
+
+        
+    </style>
+
+</head>
+<body>
+
+   
+        <button id="dark-mode-toggle" class="dark-mode-button" onclick="toggleDarkMode()">🌙</button>
+        <!-- ... Rest of the chat container content ... -->
+   <div id="hint-popup" class="hint-popup">
+    <div class="hint-content">
+        <span class="close-button" id="hint-close-button">&times;</span>
+        <h2>Need a Hint?</h2>
+        <p id="hint-message">I'm here to help! How can I assist you?</p>
+        <div class="hint-options">
+            <button id="hint-yes-button">Yes</button>
+            <button id="hint-no-button">No</button>
+        </div>
+    </div>
+</div>
+<!-- Add this button to your HTML -->
+<button id="speak-button" class="speak-button" title="Read Aloud">🎙️</button>
+
+
+    <script>
+        // JavaScript to handle text-to-speech functionality
+const speakButton = document.getElementById("speak-button");
+
+// Initialize the SpeechSynthesis API
+const synth = window.speechSynthesis;
+
+speakButton.addEventListener("click", () => {
+    const chatbox = document.getElementById("chatbox");
+    let textToSpeak = "";
+
+    // Extract text from chat messages
+    const messages = chatbox.querySelectorAll(".text");
+    messages.forEach(message => {
+        textToSpeak += message.textContent + " ";
+    });
+
+    // Create a SpeechSynthesisUtterance object
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    
+    // Modify the voice to be female (if available)
+    const voices = synth.getVoices();
+    const femaleVoice = voices.find(voice => voice.name.includes("female"));
+    if (femaleVoice) {
+        utterance.voice = femaleVoice;
+    }
+
+    // Start speaking
+    synth.speak(utterance);
+});
+
+
+        // JavaScript to control the hint pop-up
+const hintPopup = document.getElementById("hint-popup");
+const hintCloseButton = document.getElementById("hint-close-button");
+const hintMessage = document.getElementById("hint-message");
+const hintYesButton = document.getElementById("hint-yes-button");
+const hintNoButton = document.getElementById("hint-no-button");
+
+// Function to show the hint pop-up
+function showHint() {
+    hintPopup.style.display = "block";
+}
+
+// Function to hide the hint pop-up
+function hideHint() {
+    hintPopup.style.display = "none";
+}
+
+// Open the hint pop-up when the chatbot offers assistance
+// You can trigger this based on user interactions or conditions in your code
+// For example, you can call showHint() when the chatbot suggests a hint
+
+// Close the hint pop-up when the close button is clicked
+hintCloseButton.onclick = hideHint;
+
+// Handle user responses to the hint
+hintYesButton.onclick = function () {
+    // Customize the hint message here
+    hintMessage.textContent = "Here's a hint: [Your hint text here]";
+    // You can provide more hints and explanations based on user interaction
+};
+
+hintNoButton.onclick = function () {
+    // Customize the response when the user declines the hint
+    hintMessage.textContent = "Alright! If you change your mind, feel free to ask for a hint anytime.";
+    // You can provide more options or responses based on user interaction
+};
+
+        
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        const chatContainer = document.getElementById("chat-container");
+        let isDarkMode = false;
+        
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.body.classList.add("dark-mode");
+                chatContainer.classList.add("dark-mode");
+                darkModeToggle.textContent = "☀️";
+            } else {
+                document.body.classList.remove("dark-mode");
+                chatContainer.classList.remove("dark-mode");
+                darkModeToggle.textContent = "🌙";
+            }
+        }
+        
+    </script>
+    <div id="chatbox">
+        <div class="message bot-message fade-in">
+            <span class="avatar"></span>
+            <div class="text">🤖 Hello! I'm Conversa AI, your language learning companion. Let's explore languages together.</div>
+        </div>
+        <div class="message bot-message fade-in">
+            <span class="avatar"></span>
+            <div class="text">🎉 Before we begin, how much do you know the language? Select an option below:</div>
+            <div class="options">
+                <div class="option-box" id="little-bit-button">A little bit</div>
+                <div class="option-box" id="beginner-button">Beginner</div>
+                <div class="option-box" id="master-button">Master</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-button" id="close-button">&times;</span>
+            <span class="avatar1"></span>
+            <h2>What's New</h2>
+            <p>Conversa has some exciting updates:</p>
+            <ul>
+                <li>Addition of more French questions</li>
+                <li>New dark mode feature</li>
+                <li>Improved user interface</li>
+                
+                <li>New Mic option</li>
+            </ul>
+            <p>Explore and enjoy the enhanced learning experience!</p>
+        </div>
+    </div>
+
+    <div id="teaching-popup" class="teaching-popup">
+        <div class="popup-content">
+            <span class="close-button" id="teaching-close-button">&times;</span>
+            <h2>French Lesson</h2>
+            <p>Let's learn something new:</p>
+            <p><strong>Topic:</strong> French Grammar</p>
+            <p><strong>Lesson:</strong> Verbs and Conjugation</p>
+            <p>In French, verbs play a crucial role. They are the action words that describe what someone or something is doing. Understanding verb conjugation is essential for constructing sentences correctly.</p>
+            <p>For example, the verb "parler" (to speak) is conjugated as follows:</p>
+            <ul>
+                <li>Je parle (I speak)</li>
+                <li>Tu parles (You speak)</li>
+                <li>Il/Elle parle (He/She speaks)</li>
+                <li>Nous parlons (We speak)</li>
+                <li>Vous parlez (You all speak)</li>
+                <li>Ils/Elles parlent (They speak)</li>
+            </ul>
+            <p>Practice verb conjugation to improve your French language skills!</p>
+        </div>
+    </div>
+    <script>
+        // JavaScript to show the teaching popup after every 4 questions
+// JavaScript to show the teaching popup after every 4 questions
+let questionCount = 0;
+
+function showTeachingPopup() {
+    const teachingPopup = document.getElementById("teaching-popup");
+    const teachingCloseButton = document.getElementById("teaching-close-button");
+
+    // Show the teaching popup
+    teachingPopup.style.display = "block";
+
+    // Close the teaching popup when the close button is clicked
+    teachingCloseButton.onclick = function () {
+        teachingPopup.style.display = "none";
+    };
+}
+
+// Function to handle user responses
+function handleUserResponse(response, questionData) {
+    // ... (your existing code)
+
+    // Increment the question count
+    questionCount++;
+
+    // Check if it's time to show the teaching popup (every 4 questions)
+    if (questionCount % 4 === 0) {
+        showTeachingPopup();
+    }
+}
+
+
+    </script>
+    <script>
+        // JavaScript to show the popup when the page loads
+window.onload = function () {
+    const popup = document.getElementById("popup");
+    const closeButton = document.getElementById("close-button");
+
+    // Show the popup
+    popup.style.display = "block";
+
+    // Close the popup when the close button is clicked
+    closeButton.onclick = function () {
+        popup.style.display = "none";
+    };
+};
+
+
+
+    </script>
+
+    <script>
+        const chatbox = document.getElementById("chatbox");
+        const littleBitButton = document.getElementById("little-bit-button");
+        const beginnerButton = document.getElementById("beginner-button");
+        const masterButton = document.getElementById("master-button");
+        let questionIndex = 0;
+        let currentLevel = 1;
+        let userProficiency = "";
+        let previousExplanation = "";
+
+        const languageQuestions = [
+            // French Questions
+            {
+                language: "French",
+                questions: [
+                    {
+                        question: "🇫🇷 Bonjour! What's the French word for 'Hello'? 🌞",
+                        options: ["Bonjour", "Salut", "Merci", "Oui"],
+                        correctAnswer: "Bonjour",
+                        explanation: "🌞 'Bonjour' means 'Hello' in French. It's a common greeting."
+                    },
+                    {
+                        question: "🇫🇷 If someone says 'Merci', what do they mean? 🙏",
+                        options: ["Hello", "Thank you", "Goodbye", "Yes"],
+                        correctAnswer: "Thank you",
+                        explanation: "🙏 'Merci' means 'Thank you' in French. It's a polite expression of gratitude."
+                    },
+                    {
+                        question: "🇫🇷 How do you say 'Goodbye' in French? 👋",
+                        options: ["Bonjour", "Oui", "Au revoir", "Merci"],
+                        correctAnswer: "Au revoir",
+                        explanation: "👋 'Au revoir' is the way to say 'Goodbye' in French. It's a polite farewell."
+                    },
+                    {
+                        question: "🇫🇷 What's the French word for 'Yes'? ✅",
+                        options: ["No", "Oui", "Non", "Bonjour"],
+                        correctAnswer: "Oui",
+                        explanation: "✅ 'Oui' means 'Yes' in French. It's used to affirm or agree with something."
+                    },
+                    {
+                        question: "🇫🇷 Can you guess the French word for 'No'? ❌",
+                        options: ["Non", "Oui", "Merci", "Bonjour"],
+                        correctAnswer: "Non",
+                        explanation: "❌ 'Non' translates to 'No' in French. It's the opposite of 'Yes'."
+                    },
+                    {
+                    question: "Let's Go!  Learning a new language can be an exciting journey. Let's learn  Bonjour - This means Hello in French. It's a common greeting used in the morning and throughout the day. Comment ça va ? - This is a common way to ask How are you? in French. You can respond with Ça va bien for I'm good or Ça va mal for I'm not good.Je m'appelle [Your Name] - My name is [Your Name]. If you want you can note it down!",
+                    options: ["Understood!",],
+                    correctAnswer: "Understood!",
+                    explanation: "Let's learn once again and be summarized! Bonjour - This means Hello in French. It's a common greeting used in the morning and throughout the day. Comment ça va ? - This is a common way to ask How are you? in French. You can respond with Ça va bien for I'm good or Ça va mal for I'm not good.Je m'appelle [Your Name] - My name is [Your Name]. If you want you can note it down!"
+                },
+                    {
+                        question: "🇫🇷 What's the French word for 'Thank you'? 🙌",
+                        options: ["Bonjour", "Merci", "Oui", "Au revoir"],
+                        correctAnswer: "Merci",
+                        explanation: "🙌 'Merci' means 'Thank you' in French. It's a polite way to express gratitude."
+                    },
+                    {
+                        question: "🇫🇷 Which French word means 'Excuse me'? 🙇‍♂️",
+                        options: ["Oui", "Non", "Merci", "Pardon"],
+                        correctAnswer: "Pardon",
+                        explanation: "🙇‍♂️ 'Pardon' is used to say 'Excuse me' or 'I'm sorry' in French."
+                    },
+                    {
+                        question: "🇫🇷 How do you ask 'What's your name?' in French? 🤔",
+                        options: ["Comment ça va?", "Quel est ton nom?", "Où habites-tu?", "Combien ça coûte?"],
+                        correctAnswer: "Quel est ton nom?",
+                        explanation: "🤔 'Quel est ton nom?' translates to 'What's your name?' in French."
+                    },
+                    {
+                        question: "🇫🇷 Guess the French word for 'Good morning'. ☀️",
+                        options: ["Bonsoir", "Bonne nuit", "Bonjour", "Salut"],
+                        correctAnswer: "Bonjour",
+                        explanation: "☀️ 'Bonjour' means 'Good morning' in French. It's a friendly greeting used in the morning."
+                    },
+                    {
+                        question: "🇫🇷 How do you say 'I love you' in French? ❤️",
+                        options: ["Je t'aime", "Merci", "Excusez-moi", "Bonjour"],
+                        correctAnswer: "Je t'aime",
+                        explanation: "❤️ 'Je t'aime' is the expression for 'I love you' in French. It's used to convey affection."
+                    },
+
+                    {
+    question: "🇫🇷 What's the French word for 'please'? 🙏",
+    options: ["Merci", "Bonjour", "S'il vous plaît", "Au revoir"],
+    correctAnswer: "S'il vous plaît",
+    explanation: "🙏 'S'il vous plaît' translates to 'please' in French. It's used to make a polite request."
+},
+{
+    question: "🇫🇷 How do you say 'How are you?' in French? 🤔",
+    options: ["Comment tu t'appelles?", "Quel est ton âge?", "Comment ça va?", "Où habites-tu?"],
+    correctAnswer: "Comment ça va?",
+    explanation: "🤔 'Comment ça va?' is the way to ask 'How are you?' in French when addressing someone casually."
+},
+{
+    question: "🇫🇷 Guess the French word for 'I don't understand'. ❓",
+    options: ["Je t'aime", "Je parle français", "Je ne comprends pas", "Excusez-moi"],
+    correctAnswer: "Je ne comprends pas",
+    explanation: "❓ 'Je ne comprends pas' means 'I don't understand' in French. It's a useful phrase when you're unsure."
+},
+{
+    question: "🇫🇷 How do you say 'My name is...' in French? 📝",
+    options: ["Je t'aime", "Comment ça va?", "Mon nom est...", "Où habites-tu?"],
+    correctAnswer: "Mon nom est...",
+    explanation: "📝 'Mon nom est...' is used to say 'My name is...' in French when introducing yourself."
+},
+{
+    question: "🇫🇷 Can you guess the French word for 'Excuse me'? 🙇‍♀️",
+    options: ["Non", "Oui", "Merci", "Excusez-moi"],
+    correctAnswer: "Excusez-moi",
+    explanation: "🙇‍♀️ 'Excusez-moi' is used to say 'Excuse me' or 'I'm sorry' in formal situations."
+},
+{
+    question: "🇫🇷 What's the French word for 'water'? 💧",
+    options: ["Eau", "Feu", "Vent", "Terre"],
+    correctAnswer: "Eau",
+    explanation: "💧 'Eau' means 'water' in French. It's a basic and essential word."
+},
+{
+    question: "🇫🇷 How do you say 'good' in French? 👍",
+    options: ["Mauvais", "Grand", "Bon", "Petit"],
+    correctAnswer: "Bon",
+    explanation: "👍 'Bon' translates to 'good' in French. You can use it to express positive things."
+},
+{
+    question: "🇫🇷 Guess the French word for 'cat'. 🐱",
+    options: ["Chien", "Souris", "Oiseau", "Chat"],
+    correctAnswer: "Chat",
+    explanation: "🐱 'Chat' is the word for 'cat' in French. It's a common and adorable animal name."
+},
+{
+    question: "🇫🇷 How do you say 'I love you' in French? ❤️",
+    options: ["Je t'aime", "Bonjour", "Merci", "Excusez-moi"],
+    correctAnswer: "Je t'aime",
+    explanation: "❤️ 'Je t'aime' is the romantic phrase for 'I love you' in French. Express your feelings!"
+},
+{
+    question: "🇫🇷 Can you guess the French word for 'sun'? ☀️",
+    options: ["Lune", "Étoile", "Nuage", "Soleil"],
+    correctAnswer: "Soleil",
+    explanation: "☀️ 'Soleil' means 'sun' in French. It's the source of light and warmth in the sky."
+},
+
+{
+    question: "What is the French word for 'Apple'? 🍏",
+    options: ["Poire", "Banane", "Fraise", "Pomme"],
+    correctAnswer: "Pomme",
+    explanation: "Correct! 'Pomme' means Apple in French."
+},
+{
+    question: "How do you say 'Good night' in French? 🌙",
+    options: ["Bonne soirée", "Bon matin", "Bonsoir", "Au revoir"],
+    correctAnswer: "Bonsoir",
+    explanation: "Well done! 'Bonsoir' means Good night in French."
+},
+{
+    question: "What is the French word for 'Book'? 📚",
+    options: ["Journal", "Livre", "Stylo", "Téléphone"],
+    correctAnswer: "Livre",
+    explanation: "Excellent! 'Livre' means Book in French."
+},
+{
+    question: "How do you say 'Please' in French? 🙏",
+    options: ["Prière", "S'il vous plaît", "Excusez-moi", "Non"],
+    correctAnswer: "S'il vous plaît",
+    explanation: "Great job! 'S'il vous plaît' means Please in French."
+},
+{
+    question: "What is the French word for 'Friend'? 👫",
+    options: ["Frère", "Cousin", "Voisin", "Ami"],
+    correctAnswer: "Ami",
+    explanation: "You're doing well! 'Ami' means Friend in French."
+}
+
+                    // Add more questions and explanations as needed
+                ]
+            },
+            // Add more languages and levels here
+        ];
+
+        const alternateResponses = [
+            "I understand. Let me explain again:",
+            "No worries, let's try again:",
+            "Got it. Here's the explanation once more:"
+        ];
+
+        littleBitButton.addEventListener("click", () => startQuiz("little-bit"));
+        beginnerButton.addEventListener("click", () => startQuiz("beginner"));
+        masterButton.addEventListener("click", () => startQuiz("master"));
+
+        function startQuiz(proficiency) {
+            userProficiency = proficiency;
+            questionIndex = 0;
+            currentLevel = 1;
+            previousExplanation = "";
+            clearChatbox();
+            addBotMessage(`🚀 Great! Let's start learning ${languageQuestions[currentLevel - 1].language}!`);
+            showQuestion();
+        }
+
+        function clearChatbox() {
+            while (chatbox.firstChild) {
+                chatbox.removeChild(chatbox.firstChild);
+            }
+        }
+
+        function addBotMessage(message) {
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message", "bot-message", "fade-in");
+            messageElement.innerHTML = `
+                <span class="avatar"></span>
+                <div class="text">${message}</div>
+            `;
+            chatbox.appendChild(messageElement);
+        }
+
+        function addChatbotMessage(message) {
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message", "bot-message", "fade-in");
+            messageElement.innerHTML = `
+                <span class="avatar"></span>
+                <div class="text">${message}</div>
+            `;
+            chatbox.appendChild(messageElement);
+        }
+
+        function addUserMessage(message) {
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message", "user-message", "fade-in");
+            messageElement.innerHTML = `
+                <span class="avatar">👤</span>
+                <div class="text">${message}</div>
+            `;
+            chatbox.appendChild(messageElement);
+        }
+
+        function showQuestion() {
+            if (questionIndex < languageQuestions[currentLevel - 1].questions.length) {
+                const questionData = languageQuestions[currentLevel - 1].questions[questionIndex];
+                addChatbotMessage(questionData.question);
+                if (userProficiency !== "master" && questionData.previousResponse) {
+                    addChatbotMessage(`Your previous response: "${questionData.previousResponse}"`);
+                }
+                if (previousExplanation) {
+                    addChatbotMessage(previousExplanation);
+                }
+                const options = document.createElement("div");
+                options.classList.add("options");
+                questionData.options.forEach(option => {
+                    const optionBox = document.createElement("div");
+                    optionBox.classList.add("option-box");
+                    optionBox.textContent = option;
+                    optionBox.addEventListener("click", () => handleUserResponse(option, questionData));
+                    options.appendChild(optionBox);
+                });
+                chatbox.appendChild(options);
+            } else {
+                if (currentLevel < 2) {
+                    currentLevel++;
+                    questionIndex = 0;
+                    previousExplanation = "";
+                    addBotMessage(`🎉 Congratulations on completing this level! Let's move on to the next level.`);
+                    addBotMessage(`🌟 Do you want to continue learning? Select an option:`);
+                    const options = document.createElement("div");
+                    options.classList.add("options");
+                    const continueButton = document.createElement("div");
+                    continueButton.classList.add("option-box");
+                    continueButton.textContent = "Yes, let's go";
+                    continueButton.addEventListener("click", () => continueLearning());
+                    const stopButton = document.createElement("div");
+                    stopButton.classList.add("option-box");
+                    stopButton.textContent = "No, enough for today";
+                    stopButton.addEventListener("click", () => stopLearning());
+                    options.appendChild(continueButton);
+                    options.appendChild(stopButton);
+                    chatbox.appendChild(options);
+                } else {
+                    addBotMessage(`🎉 Congratulations on completing all levels! You're making great progress in learning ${languageQuestions[currentLevel - 1].language}.`);
+                }
+            }
+        }
+
+        function continueLearning() {
+            clearChatbox();
+            addBotMessage(`🚀 Great! Let's continue learning ${languageQuestions[currentLevel - 1].language}!`);
+            showQuestion();
+        }
+
+        function stopLearning() {
+            clearChatbox();
+            addBotMessage(`👋 Alright! You've done a fantastic job today. Feel free to come back anytime for more learning.`);
+        }
+
+        function handleUserResponse(response, questionData) {
+            addUserMessage(response);
+            clearChatbox();
+
+            if (response === questionData.correctAnswer) {
+                addChatbotMessage(questionData.explanation);
+                if (userProficiency !== "master") {
+                    questionData.previousResponse = response;
+                }
+                if (questionIndex < languageQuestions[currentLevel - 1].questions.length - 1) {
+                    addChatbotMessage("👍 Well done! Ready for the next question?");
+                    addChatbotMessage("Choose 'Understood' if you're ready or 'Didn't understand' if you need more explanation.");
+                    const options = document.createElement("div");
+                    options.classList.add("options");
+                    const understoodButton = document.createElement("div");
+                    understoodButton.classList.add("option-box");
+                    understoodButton.textContent = "Understood";
+                    understoodButton.addEventListener("click", () => showNextQuestion(questionData));
+                    const didntUnderstandButton = document.createElement("div");
+                    didntUnderstandButton.classList.add("option-box");
+                    didntUnderstandButton.textContent = "Didn't understand";
+                    didntUnderstandButton.addEventListener("click", () => handleAlternateResponse(questionData));
+                    options.appendChild(understoodButton);
+                    options.appendChild(didntUnderstandButton);
+                    chatbox.appendChild(options);
+                } else {
+                    showNextQuestion(questionData);
+                }
+            } else {
+                handleAlternateResponse(questionData);
+            }
+        }
+
+        function handleAlternateResponse(questionData) {
+            const alternateIndex = Math.floor(Math.random() * alternateResponses.length);
+            const alternateResponse = alternateResponses[alternateIndex];
+            previousExplanation = `${alternateResponse} ${questionData.explanation}`;
+            addChatbotMessage(previousExplanation);
+            addChatbotMessage("👉 Let's try again!");
+            setTimeout(() => showQuestion(), 1500);
+        }
+
+        function showNextQuestion(questionData) {
+            questionIndex++;
+            previousExplanation = ""; // Reset the previous explanation
+            clearChatbox();
+            showQuestion();
+        }
+        
+    </script>
+</body>
+</html>
