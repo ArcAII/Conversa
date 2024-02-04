@@ -150,7 +150,7 @@
         }
 
         .dark-mode {
-            background-color: #1a1a1a;
+            background-color: #000000;
             color: #ffffff;
         }
         
@@ -171,7 +171,7 @@
         }
         /* Add this style to your existing CSS */
 .dark-mode .option-box {
-    background-color: #333;
+    background-color: #202123;
     color: #fff;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -315,6 +315,19 @@
 
 </head>
 <body>
+    <div id="language-icon" style="position: fixed; top: 10px; right: 10px; cursor: pointer;">
+        <!-- Replace 'globe.png' with your language icon image -->
+        <img src="globe.png" alt="Language Icon" width="30" height="30" onclick="openLanguageWebsite()">
+    </div>
+
+    <!-- Your existing scripts go here -->
+
+    <script>
+        function openLanguageWebsite() {
+            // Replace 'https://your-language-website.com' with your actual language website
+            window.open('https://your-language-website.com', '_blank');
+        }
+    </script>
 
    
         <button id="dark-mode-toggle" class="dark-mode-button" onclick="toggleDarkMode()">🌙</button>
@@ -885,6 +898,42 @@ window.onload = function () {
     correctAnswer: "🐎 Horse",
     explanation: "👍 Correct! 'Cheval' means 'Horse' in English.",
 },
+
+{
+    question: "Construct a sentence using 'Bonjour' and 'comment ça va?'",
+    options: [
+      "Bonjour, ça va bien.",
+      "Comment ça va, bonjour!",
+      "Salut, bien ça va?",
+      "Bonjour, ça va?"
+    ],
+    correctAnswer: "Bonjour, ça va bien.",
+    explanation: "The correct answer is A) 'Bonjour, ça va bien.' This means 'Hello, how are you?' in French. 'Bonjour' means 'hello' and 'ça va bien' means 'how are you doing?'"
+  },
+  {
+    question: "Form a sentence with 'Je vais' and 'au parc' to indicate going somewhere.",
+    options: [
+      "Je vais au café.",
+      "Je vais au parc.",
+      "Je vais au école.",
+      "Je vais au cinéma."
+    ],
+    correctAnswer: "Je vais au parc.",
+    explanation: "The correct answer is B) 'Je vais au parc.' This translates to 'I am going to the park' in English. 'Je vais' means 'I am going,' and 'au parc' means 'to the park.'"
+  },
+  {
+    question: "Combine 'Elle aime' and 'jouer au tennis' to form a sentence.",
+    options: [
+      "Elle aime lire.",
+      "Elle aime jouer au football.",
+      "Elle aime danser.",
+      "Elle aime jouer au tennis."
+    ],
+    correctAnswer: "Elle aime jouer au tennis.",
+    explanation: "The correct answer is D) 'Elle aime jouer au tennis.' This translates to 'She likes to play tennis' in English. 'Elle aime' means 'she likes,' and 'jouer au tennis' means 'to play tennis.'"
+  }
+  // Add more questions here...
+
 
 
 
